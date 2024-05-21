@@ -59,23 +59,23 @@ impl NetworkManager {
                     match (n.driver, n.options, n.id) {
                         (Some(driver), Some(options), Some(nid)) => {
                             if driver.eq("rustyvxcan") {
-                                let mut d: String = String::from("vcan");
-                                let mut p: String = String::from("vcan");
-                                let mut c: u32 = 0u32;
-                                if options.contains_key("vxcan.dev") {
-                                    d = options["vxcan.dev"].clone();
-                                }
-                                if options.contains_key("vxcan.peer") {
-                                    p = options["vxcan.peer"].clone();
-                                }
-                                if options.contains_key("vxcan.id") {
-                                    c = match options["vxcan.id"].trim().parse() {
-                                        Ok(i) => i,
-                                        Err(_) => 0u32,
-                                    };
-                                }
+                                let device = if options.contains_key("vxcan.dev") {
+                                    options["vxcan.dev"].clone()
+                                } else {
+                                    String::from("vcan")
+                                };
+                                let peer = if options.contains_key("vxcan.peer") {
+                                    options["vxcan.peer"].clone()
+                                } else {
+                                    String::from("vcan")
+                                };
+                                let canid = if options.contains_key("vxcan.id") {
+                                    options["vxcan.id"].clone()
+                                } else {
+                                    String::from("0")
+                                };
 
-                                let nw = Network::new(d, p, c);
+                                let nw = Network::new(device, peer, canid);
                                 self.network_list.write().insert(nid, nw);
                             }
                         }
@@ -180,7 +180,7 @@ impl NetworkManager {
         };
     }
 
-    fn options_parse(&self, options: String) -> Result<(String, String, u32), Error> {
+    fn options_parse(&self, options: String) -> Result<(String, String, String), Error> {
         match serde_json::from_str::<serde_json::Value>(&options) {
             Ok(v) => {
                 let device = match v["vxcan.dev"].as_str() {
@@ -197,14 +197,11 @@ impl NetworkManager {
                         String::from("vcanp")
                     }
                 };
-                let canid: u32 = match v["vxcan.id"].as_str() {
-                    Some(u) => match u.to_string().trim().parse() {
-                        Ok(i) => i,
-                        Err(_) => 0u32,
-                    },
+                let canid = match v["vxcan.id"].as_str() {
+                    Some(u) => u.to_string(),
                     None => {
                         println!(" !! Error parsing vxcan.dev option: {}", v["vxcan.dev"]);
-                        0u32
+                        String::from("0")
                     }
                 };
 

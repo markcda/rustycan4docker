@@ -41,7 +41,7 @@ pub struct JoinResponse {
 pub struct Network {
     device: String,
     peer: String,
-    canid: u32,
+    canid: String,
     ifc: String,
     created: bool,
     endpoint_list: Arc<RwLock<HashMap<String, Endpoint>>>,
@@ -49,7 +49,7 @@ pub struct Network {
 }
 
 impl Network {
-    pub fn new(device: String, peer: String, canid: u32) -> Self {
+    pub fn new(device: String, peer: String, canid: String) -> Self {
         let ifcs = interfaces::Interface::get_all().unwrap();
 
         let mut exists: bool = false;
@@ -84,7 +84,7 @@ impl Network {
             " -> Creating network with settings: device='{}', peer='{}', id='{}' -- new device? {}",
             device,
             peer,
-            canid.to_string(),
+            canid,
             !exists
         );
         Network {
@@ -254,7 +254,7 @@ impl Drop for Network {
                 " -> Dropping network object: device={}, peer={}, id={}",
                 self.device,
                 self.peer,
-                self.canid.to_string()
+                self.canid
             );
         }
     }
