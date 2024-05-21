@@ -26,6 +26,7 @@
 
 use crate::manager::NetworkManager;
 use serde::{Deserialize, Serialize};
+use std::fs;
 use std::vec::Vec;
 use tokio::net::UnixListener;
 use tokio_stream::wrappers::UnixListenerStream;
@@ -489,18 +490,22 @@ async fn main() {
         .or(nw_leave)
         .or(dsc_new)
         .or(dsc_del);
-
-    let incoming =
-        UnixListenerStream::new(UnixListener::bind("/run/docker/plugins/rustyvxcan.sock").unwrap());
-    warp::serve(routes).run_incoming(incoming).await;
-
-    // Alternatively, run an IP-based plugin
-    // Create the file /etc/docker/plugins/rustyvxcan.json and add the following:
-    //      {
-    //          "Name": "rustyvxcan",
-    //          "Addr": "http://127.0.0.1:7373"
-    //      }
-    //
-    // Then, uncomment the following line (and remove the UnixListener above)
-    // warp::serve(routes).run(([127,0,0,1],7373)).await;
+    #[cfg(not(feature = "ip_based_plugin"))]
+    {
+        let incoming = UnixListenerStream::new(
+            UnixListener::bind("/run/docker/plugins/rustyvxcan.sock").unwrap(),
+        );
+        warp::serve(routes).run_incoming(incoming).await;
+    }
+    #[cfg(feature = "ip_based_plugin")]
+    {
+        let content = "
+{
+    \"Name\": \"rustyvxcan\",
+    \"Addr\": \"http://127.0.0.1:7373\"
+}";
+        fs::write("/etc/docker/plugins/rustyvxcan.json", content)
+            .expect("Unable to write docker plugin file");
+        warp::serve(routes).run(([127, 0, 0, 1], 7373)).await;
+    }
 }

@@ -82,10 +82,7 @@ impl Network {
         }
         println!(
             " -> Creating network with settings: device='{}', peer='{}', id='{}' -- new device? {}",
-            device,
-            peer,
-            canid,
-            !exists
+            device, peer, canid, !exists
         );
         Network {
             device: device,
@@ -252,9 +249,7 @@ impl Drop for Network {
 
             println!(
                 " -> Dropping network object: device={}, peer={}, id={}",
-                self.device,
-                self.peer,
-                self.canid
+                self.device, self.peer, self.canid
             );
         }
     }

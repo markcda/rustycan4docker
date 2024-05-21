@@ -18,3 +18,6 @@ tokio-stream = { version = "0.1.11", features = ["net"] }
 interfaces = "0.0.8"
 truncrate = "0.1.3"
 bollard = "0.12.0"
+
+[features]
+ip_based_plugin = []

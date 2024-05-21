@@ -48,7 +48,6 @@ impl NetworkManager {
     pub async fn network_load(&self) {
         let connection = Docker::connect_with_unix_defaults().unwrap();
 
-
         let list_networks_filters: HashMap<&str, Vec<&str>> = HashMap::new();
         let config = ListNetworksOptions {
             filters: list_networks_filters,
