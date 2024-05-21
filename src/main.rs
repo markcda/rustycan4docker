@@ -504,6 +504,7 @@ async fn main() {
     \"Name\": \"rustyvxcan\",
     \"Addr\": \"http://127.0.0.1:7373\"
 }";
+        fs::create_dir_all("/etc/docker/plugins");
         fs::write("/etc/docker/plugins/rustyvxcan.json", content)
             .expect("Unable to write docker plugin file");
         warp::serve(routes).run(([127, 0, 0, 1], 7373)).await;
