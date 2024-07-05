@@ -63,4 +63,6 @@ networks:
 ```
 
 ### Plugin Installation
-This is typically just used as a simple systemd service, rather than being installed with `docker plugin install <name>`.
+```
+./docker-plugin/build-plugin.sh
+```

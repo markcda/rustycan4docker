@@ -19,11 +19,11 @@ id=$(docker create "${IMAGE_NAME}" true)
 sudo mkdir -p "${PLUGIN_DIR}"/rootfs
 sudo docker export "${id}" | sudo tar -x -C "${PLUGIN_DIR}"/rootfs
 
-sudo docker plugin create ngpbach/rustycan4docker "${PLUGIN_DIR}"
+sudo docker plugin create ${PLUGIN_NAME} "${PLUGIN_DIR}"
 
 docker rm -vf "${id}"
 docker rmi -f "${IMAGE_NAME}"
 sudo rm -rf "${PLUGIN_DIR}"/rootfs 
 
-docker plugin enable ngpbach/rustycan4docker
+docker plugin enable ${PLUGIN_NAME}
 
