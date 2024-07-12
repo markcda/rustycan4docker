@@ -64,5 +64,6 @@ networks:
 
 ### Plugin Installation
 ```
-./docker-plugin/build-plugin.sh
+PLUGIN_NAME="vxcan4docker" ./docker-plugin/build-plugin.sh
+docker plugin enable vxcan4docker
 ```

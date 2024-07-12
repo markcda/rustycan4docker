@@ -4,7 +4,7 @@ set -euxo
 # https://docs.docker.com/engine/extend/#developing-a-plugin
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-PLUGIN_NAME=ngpbach/rustycan4docker
+PLUGIN_NAME="${PLUGIN_NAME:-ngpbach/rustycan4docker}"
 IMAGE_NAME=rustycan4docker:plugin_build_stage
 PLUGIN_DIR="${SCRIPT_DIR}"
 SOURCE_DIR="${SCRIPT_DIR}"/..
@@ -25,5 +25,4 @@ docker rm -vf "${id}"
 docker rmi -f "${IMAGE_NAME}"
 sudo rm -rf "${PLUGIN_DIR}"/rootfs 
 
-docker plugin enable ${PLUGIN_NAME}
-
+docker plugin ls
