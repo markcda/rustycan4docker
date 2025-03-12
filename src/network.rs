@@ -63,7 +63,7 @@ impl Network {
 
         if !exists {
             println!(" -> Creating interface {newifc}...");
-            std::process::Command::new("ip")
+            let out = std::process::Command::new("ip")
                 .arg("link")
                 .arg("add")
                 .arg("dev")
@@ -72,13 +72,19 @@ impl Network {
                 .arg("vcan")
                 .output()
                 .expect(" !! Failed to add VCAN device");
-            std::process::Command::new("ip")
+
+            println!(" -> `ip link add` out: {:?}", out);
+
+            let out = std::process::Command::new("ip")
                 .arg("link")
                 .arg("set")
                 .arg("up")
                 .arg(&newifc)
                 .output()
                 .expect(" !! Failed to start VCAN device");
+
+            println!(" -> `ip link set` out: {:?}", out);
+
             std::thread::sleep(std::time::Duration::from_secs(1));
         }
         println!(
