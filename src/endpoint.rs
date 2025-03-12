@@ -75,7 +75,7 @@ impl Endpoint {
             newifc, peerifc
         );
         Endpoint {
-            uid: uid,
+            uid,
             device: newifc,
             peer: peerifc,
             created: !exists,

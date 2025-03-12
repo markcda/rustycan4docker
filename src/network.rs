@@ -168,7 +168,7 @@ impl Network {
     fn add_cangw_rule(&self, src: &String, dst: &String) {
         println!(" -> Adding cangw rule for {src} to {dst}");
 
-        std::process::Command::new("cangw")
+        let out = std::process::Command::new("cangw")
             .arg("-A")
             .arg("-s")
             .arg(&src)
@@ -177,6 +177,8 @@ impl Network {
             .arg("-e")
             .output()
             .expect(" !! Failed to add cangw rule");
+
+        println!(" -> `cangw` out: {:?}", out);
 
         std::process::Command::new("cangw")
             .arg("-A")
@@ -188,6 +190,8 @@ impl Network {
             .output()
             .expect(" !! Failed to add cangw extended rule");
 
+        println!(" -> `cangw` extended out: {:?}", out);
+
         self.rules_list.write().push((src.clone(), dst.clone()));
     }
 
@@ -196,7 +200,7 @@ impl Network {
         if rules.contains(&(src.clone(), dst.clone())) {
             println!(" -> Removing cangw rule for {src} to {dst}");
 
-            std::process::Command::new("cangw")
+            let out = std::process::Command::new("cangw")
                 .arg("-D")
                 .arg("-s")
                 .arg(&src)
@@ -206,7 +210,9 @@ impl Network {
                 .output()
                 .expect(" !! Failed to remove cangw rule");
 
-            std::process::Command::new("cangw")
+            println!(" -> Removed cangw rule with output: {:?}", out);
+
+            let out = std::process::Command::new("cangw")
                 .arg("-D")
                 .arg("-s")
                 .arg(&src)
@@ -215,6 +221,8 @@ impl Network {
                 .arg("-eX")
                 .output()
                 .expect(" !! Failed to remove cangw extended rule");
+
+            println!(" -> Removed cangw extended rule with output: {:?}", out);
 
             let index = rules
                 .iter()

@@ -26,3 +26,4 @@ docker rmi -f "${IMAGE_NAME}"
 sudo rm -rf "${PLUGIN_DIR}"/rootfs
 
 docker plugin ls
+docker plugin enable titoffklim/rustycan4docker:latest
