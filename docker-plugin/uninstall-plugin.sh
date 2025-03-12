@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PLUGINNAME=ngpbach/rustycan4docker
+PLUGINNAME=titoffklim/rustycan4docker
 
 # Remove active networks
 docker network ls | grep can && \
