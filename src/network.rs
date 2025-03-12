@@ -79,15 +79,16 @@ impl Network {
                 .arg(&newifc)
                 .output()
                 .expect(" !! Failed to start VCAN device");
+            std::thread::sleep(std::time::Duration::from_secs(1));
         }
         println!(
             " -> Creating network with settings: device='{}', peer='{}', id='{}' -- new device? {}",
             device, peer, canid, !exists
         );
         Network {
-            device: device,
-            peer: peer,
-            canid: canid,
+            device,
+            peer,
+            canid,
             ifc: newifc,
             created: !exists,
             endpoint_list: Arc::new(RwLock::new(HashMap::new())),
